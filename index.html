@@ -473,6 +473,22 @@
         padding: 24px;
         transition: opacity 0.4s ease;
     }
+    /* When mobile keyboard is open, pin gate to visible viewport and align content to top */
+    #passwordGate.keyboard-open {
+        top: 0;
+        left: 0;
+        right: 0;
+        bottom: auto;
+        height: 100vh;
+        align-items: flex-start;
+        padding-top: max(env(safe-area-inset-top), 20px);
+        overflow-y: auto;
+        -webkit-overflow-scrolling: touch;
+    }
+    #passwordGate.keyboard-open .gate-card {
+        margin-top: 0;
+        flex-shrink: 0;
+    }
     #passwordGate.hidden {
         opacity: 0;
         pointer-events: none;
@@ -732,6 +748,33 @@ gateToggleBtn.addEventListener("click", function() {
     gateToggleBtn.textContent = isPassword ? "Hide" : "Show";
     gateToggleBtn.setAttribute("title", isPassword ? "Hide password" : "Show password");
     gateToggleBtn.setAttribute("aria-label", isPassword ? "Hide password" : "Show password");
+});
+
+// When mobile keyboard opens, move password gate upward for better visibility
+function updateGateForViewport() {
+    const vv = window.visualViewport;
+    if (!vv) return;
+    const keyboardLikelyOpen = vv.height < window.innerHeight * 0.75 || vv.height < 400;
+    if (keyboardLikelyOpen) {
+        gateEl.classList.add("keyboard-open");
+        gateEl.style.top = vv.offsetTop + "px";
+        gateEl.style.height = vv.height + "px";
+    } else {
+        gateEl.classList.remove("keyboard-open");
+        gateEl.style.top = "";
+        gateEl.style.height = "";
+    }
+}
+
+if (window.visualViewport) {
+    window.visualViewport.addEventListener("resize", updateGateForViewport);
+    window.visualViewport.addEventListener("scroll", updateGateForViewport);
+}
+gateInput.addEventListener("focus", function() {
+    setTimeout(updateGateForViewport, 100);
+});
+gateInput.addEventListener("blur", function() {
+    setTimeout(updateGateForViewport, 300);
 });
 
 function checkGate(e) {
