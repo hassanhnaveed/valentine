@@ -514,6 +514,32 @@
     .gate-card input:focus {
         border-color: rgba(255,255,255,0.8);
     }
+    .gate-password-wrap {
+        position: relative;
+        margin-bottom: 12px;
+    }
+    .gate-password-wrap input {
+        margin-bottom: 0;
+        padding-right: 48px;
+    }
+    .gate-toggle-password {
+        position: absolute;
+        right: 10px;
+        top: 50%;
+        transform: translateY(-50%);
+        background: none;
+        border: none;
+        color: rgba(255,255,255,0.9);
+        cursor: pointer;
+        padding: 4px 8px;
+        font-size: 0.85rem;
+        border-radius: 6px;
+        transition: background 0.2s, color 0.2s;
+    }
+    .gate-toggle-password:hover {
+        background: rgba(255,255,255,0.2);
+        color: #fff;
+    }
     .gate-card .btn-unlock {
         width: 100%;
         padding: 12px 20px;
@@ -530,10 +556,18 @@
         transform: scale(0.98);
     }
     .gate-error {
-        margin-top: 10px;
-        font-size: 0.85rem;
-        color: #ffcccc;
+        margin-top: 12px;
+        padding: 10px 12px;
+        font-size: 0.9rem;
+        font-weight: 500;
+        color: #fff;
+        background: rgba(180, 20, 50, 0.5);
+        border-radius: 10px;
         min-height: 20px;
+        text-align: center;
+    }
+    .gate-error:empty {
+        display: none;
     }
 </style>
 </head>
@@ -545,7 +579,10 @@
         <h2>💌 Private link</h2>
         <p>Enter the password to open your surprise.</p>
         <form id="gateForm" onsubmit="return checkGate(event)">
-            <input type="password" id="gatePassword" placeholder="Password" autocomplete="off" />
+            <div class="gate-password-wrap">
+                <input type="password" id="gatePassword" placeholder="Password" autocomplete="off" />
+                <button type="button" class="gate-toggle-password" id="gateTogglePassword" title="Show password" aria-label="Show password">Show</button>
+            </div>
             <button type="submit" class="btn-unlock">Unlock 💖</button>
         </form>
         <div class="gate-error" id="gateError"></div>
@@ -687,6 +724,15 @@ const gateEl = document.getElementById("passwordGate");
 const gateForm = document.getElementById("gateForm");
 const gateInput = document.getElementById("gatePassword");
 const gateError = document.getElementById("gateError");
+const gateToggleBtn = document.getElementById("gateTogglePassword");
+
+gateToggleBtn.addEventListener("click", function() {
+    const isPassword = gateInput.type === "password";
+    gateInput.type = isPassword ? "text" : "password";
+    gateToggleBtn.textContent = isPassword ? "Hide" : "Show";
+    gateToggleBtn.setAttribute("title", isPassword ? "Hide password" : "Show password");
+    gateToggleBtn.setAttribute("aria-label", isPassword ? "Hide password" : "Show password");
+});
 
 function checkGate(e) {
     e.preventDefault();
