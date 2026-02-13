@@ -585,6 +585,41 @@
     .gate-error:empty {
         display: none;
     }
+
+    .song-card {
+        margin-top: 14px;
+        background: rgba(255,255,255,0.16);
+        border-radius: 18px;
+        padding: 10px 12px 12px;
+    }
+    .song-card header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        font-size: 0.85rem;
+        opacity: 0.9;
+        margin-bottom: 6px;
+    }
+    .song-dedication {
+        font-size: 0.8rem;
+        opacity: 0.9;
+        margin-bottom: 8px;
+    }
+    .song-frame-wrap {
+        position: relative;
+        width: 100%;
+        padding-top: 56.25%; /* 16:9 */
+        border-radius: 14px;
+        overflow: hidden;
+        box-shadow: 0 10px 20px rgba(0,0,0,0.25);
+    }
+    .song-frame-wrap iframe {
+        position: absolute;
+        inset: 0;
+        width: 100%;
+        height: 100%;
+        border: 0;
+    }
 </style>
 </head>
 
@@ -639,6 +674,7 @@
         <div class="chip-row">
             <div class="chip"><span>💍</span> Proposal moment</div>
             <div class="chip"><span>💌</span> Love letter</div>
+            <div class="chip"><span>🎵</span> Our song</div>
             <div class="chip"><span>🎮</span> Mini game</div>
             <div class="chip"><span>⏱️</span> Since 09·03·2021</div>
         </div>
@@ -711,6 +747,27 @@
                     With all my love,<br>
                     Hassan
                 </div>
+            </div>
+        </div>
+
+        <!-- Our song -->
+        <div class="song-card">
+            <header>
+                <span>Our love song</span>
+                <span>For Sadia 🎵💗</span>
+            </header>
+            <div class="song-dedication">
+                Whenever you hear this, I want you to remember that no matter where we are,
+                my heart is quietly singing for you, Sadia. 💖
+            </div>
+            <div class="song-frame-wrap">
+                <iframe
+                    src="https://www.youtube.com/embed/55c6IlV7BEo?rel=0"
+                    title="Love song for Sadia"
+                    allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                    allowfullscreen
+                    loading="lazy"
+                ></iframe>
             </div>
         </div>
 
