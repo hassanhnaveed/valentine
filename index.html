@@ -459,10 +459,97 @@
             border-radius: 28px;
         }
     }
+
+    /* Password gate overlay */
+    #passwordGate {
+        position: fixed;
+        inset: 0;
+        background: var(--bg-gradient);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        z-index: 9999;
+        padding: 24px;
+        transition: opacity 0.4s ease;
+    }
+    #passwordGate.hidden {
+        opacity: 0;
+        pointer-events: none;
+    }
+    .gate-card {
+        background: rgba(255,255,255,0.2);
+        backdrop-filter: blur(20px);
+        border-radius: 24px;
+        padding: 28px 24px;
+        max-width: 320px;
+        width: 100%;
+        text-align: center;
+        box-shadow: 0 20px 40px rgba(0,0,0,0.15);
+    }
+    .gate-card h2 {
+        margin: 0 0 8px;
+        font-size: 1.25rem;
+        color: #fff;
+    }
+    .gate-card p {
+        margin: 0 0 20px;
+        font-size: 0.9rem;
+        opacity: 0.9;
+    }
+    .gate-card input {
+        width: 100%;
+        padding: 12px 16px;
+        border: 2px solid rgba(255,255,255,0.4);
+        border-radius: 12px;
+        font-size: 1rem;
+        background: rgba(255,255,255,0.15);
+        color: #fff;
+        margin-bottom: 12px;
+        outline: none;
+    }
+    .gate-card input::placeholder {
+        color: rgba(255,255,255,0.6);
+    }
+    .gate-card input:focus {
+        border-color: rgba(255,255,255,0.8);
+    }
+    .gate-card .btn-unlock {
+        width: 100%;
+        padding: 12px 20px;
+        border: none;
+        border-radius: 999px;
+        background: #fff;
+        color: var(--pink);
+        font-size: 1rem;
+        font-weight: 600;
+        cursor: pointer;
+        transition: transform 0.2s ease;
+    }
+    .gate-card .btn-unlock:active {
+        transform: scale(0.98);
+    }
+    .gate-error {
+        margin-top: 10px;
+        font-size: 0.85rem;
+        color: #ffcccc;
+        min-height: 20px;
+    }
 </style>
 </head>
 
 <body>
+
+<div id="passwordGate">
+    <div class="gate-card">
+        <h2>💌 Private link</h2>
+        <p>Enter the password to open your surprise.</p>
+        <form id="gateForm" onsubmit="return checkGate(event)">
+            <input type="password" id="gatePassword" placeholder="Password" autocomplete="off" />
+            <button type="submit" class="btn-unlock">Unlock 💖</button>
+        </form>
+        <div class="gate-error" id="gateError"></div>
+    </div>
+</div>
 
 <div class="phone-frame">
     <div class="phone-notch"></div>
@@ -592,6 +679,35 @@
 </div>
 
 <script>
+// Password gate – change this to your secret password (e.g. your wife's name or a special word)
+const GATE_PASSWORD = "Sadia";
+
+const gateEl = document.getElementById("passwordGate");
+const gateForm = document.getElementById("gateForm");
+const gateInput = document.getElementById("gatePassword");
+const gateError = document.getElementById("gateError");
+
+function checkGate(e) {
+    e.preventDefault();
+    gateError.textContent = "";
+    if (gateInput.value.trim() === GATE_PASSWORD) {
+        gateEl.classList.add("hidden");
+        try { sessionStorage.setItem("valentine_unlocked", "1"); } catch (err) {}
+        setTimeout(function() { gateEl.style.display = "none"; }, 450);
+        return false;
+    }
+    gateError.textContent = "Wrong password. Try again 💕";
+    gateInput.value = "";
+    gateInput.focus();
+    return false;
+}
+
+if (sessionStorage.getItem("valentine_unlocked") === "1") {
+    gateEl.style.display = "none";
+} else {
+    gateInput.focus();
+}
+
 // floating hearts generator (background)
 setInterval(() => {
     const heart = document.createElement("div");
