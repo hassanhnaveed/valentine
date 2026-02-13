@@ -455,6 +455,30 @@
         animation: pulse 1.6s infinite;
     }
 
+    /* Heartbeat (lub-dub) – syncs with music when YouTube is playing */
+    @keyframes heartbeat {
+        0%, 100% { transform: scale(1); }
+        14% { transform: scale(1.2); }
+        28% { transform: scale(1); }
+        42% { transform: scale(1.15); }
+        56% { transform: scale(1); }
+    }
+    .heartbeat-beat {
+        animation: heartbeat 0.9s ease-in-out infinite;
+    }
+    .heartbeat-icon {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        width: 100%;
+        font-size: 2.5rem;
+        line-height: 1;
+        margin-bottom: 8px;
+    }
+    .heartbeat-icon.heartbeat-beat {
+        transform-origin: center;
+    }
+
     @media (max-width: 400px) {
         .phone-frame {
             border-radius: 28px;
@@ -760,9 +784,11 @@
                 Whenever you hear this, I want you to remember that no matter where we are,
                 my heart is quietly singing for you, Sadia. 💖
             </div>
+            <div class="heartbeat-icon" id="heartbeatIcon" title="Heart beats with the song">❤️</div>
             <div class="song-frame-wrap">
                 <iframe
-                    src="https://www.youtube.com/embed/55c6IlV7BEo?rel=0"
+                    id="youtubePlayer"
+                    src="https://www.youtube.com/embed/55c6IlV7BEo?rel=0&enablejsapi=1"
                     title="Love song for Sadia"
                     allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
                     allowfullscreen
@@ -789,6 +815,7 @@
     </div>
 </div>
 
+<script src="https://www.youtube.com/iframe_api"></script>
 <script>
 // Password gate – change this to your secret password (e.g. your wife's name or a special word)
 const GATE_PASSWORD = "Sadia";
@@ -990,6 +1017,22 @@ function onTileClick(e) {
 
 resetGameBtn.addEventListener("click", initGame);
 initGame();
+
+// Heartbeat with music: sync heartbeat animation to YouTube player
+const heartbeatIcon = document.getElementById("heartbeatIcon");
+window.onYouTubeIframeAPIReady = function() {
+    new YT.Player("youtubePlayer", {
+        events: {
+            onStateChange: function(e) {
+                if (e.data === YT.PlayerState.PLAYING) {
+                    heartbeatIcon.classList.add("heartbeat-beat");
+                } else {
+                    heartbeatIcon.classList.remove("heartbeat-beat");
+                }
+            }
+        }
+    });
+};
 </script>
 
 </body>
